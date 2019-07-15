@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Todo List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12" id="toDoListApp">
+                <h1>{{message}} Todo List </h1>
+
+                <!-- 新增代辦事項 -->
+                <div class="newItemBox">
+                    <input type="text" class="form-control newItem" v-model="newTodoText">
+                    <div class="pull-right">
+                        <button id="newItem" class="btn btn-success btn-sm" @click="addNewItem">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <ul id="latestNews" class="list-group">
+                    <li v-for="(item,index) in todoList" class="list-item">
+                        <div class="inputbox">
+                            <input type="text" class="form-control editorInput" v-if="edtiorIndex === index" v-model="item.title">
+                            <span class="todoText" v-else> {{item.title}} </span>
+                        </div>
+                        <div class="btnBox">
+                            <!-- 編輯按鈕 -->
+                            <button @click="okButtonClick(index)" v-if="edtiorIndex === index" class="btn btn-warning btn-xs">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </button>
+                            <!-- 儲存按鈕 -->
+                            <button @click="editButtonClick(index)" v-else="edtiorIndex" class="btn btn-info btn-xs">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </button>
+                            <!-- 刪除按鈕 -->
+                            <button @click="deleteButtonClick(index)" class="btn btn-danger btn-xs ">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#toDoListApp",
+            data: {
+                message: 'Vue',
+                todoList: [
+                    { title: "Todo A" },
+                    { title: "Todo B" },
+                    { title: "Todo C" },
+                    { title: "Todo D" }
+                ],
+                newTodoText: '',
+                edtiorIndex: ''
+            },
+            methods: {
+                addNewItem: function () {
+                    if (this.newTodoText !== '') {
+                        this.todoList.push({
+                            title: this.newTodoText
+                        })
+                        this.newTodoText = ''
+                    } else {
+                        alert("代辦事項名稱不可為空白!!!");
+                        return;
+                    }
+
+                },
+                editButtonClick: function (index) {
+                    this.edtiorIndex = index;
+                },
+                okButtonClick: function (index) {
+                    if (this.todoList[index].title === '') {
+                        alert("代辦事項名稱不可為空白!!!");
+                        return;
+                    } else {
+                        this.edtiorIndex = "";
+                    }
+                },
+                deleteButtonClick: function (index) {
+                    this.todoList.splice(index, 1)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
